@@ -89,15 +89,44 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(_modeInscription ? 'Créer un compte' : 'Connexion')),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 400),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
-                TextField(
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  // Bouton retour cohérent avec celui du formulaire de
+                  // signalement, plutôt que la flèche automatique d'AppBar.
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.arrow_back),
+                      label: const Text('Retour'),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Même en-tête logo + titre que les autres écrans, pour
+                  // garder une identité visuelle cohérente.
+                  Image.asset('assets/images/MonQuartier-Signale-logo-2.png', height: 150),
+                  const SizedBox(height: 12),
+                  Text(
+                    _modeInscription ? 'Créer un compte' : 'Connexion',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Signalements à Crosne',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  const SizedBox(height: 24),
+
+                  TextField(
                   controller: _emailCtrl,
                   decoration: const InputDecoration(labelText: 'Email'),
                   keyboardType: TextInputType.emailAddress,
@@ -151,6 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 }
