@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/MonQuartier-Signale-logo-0.jpg', height: 150),
+                  Image.asset('assets/images/MonQuartier-Signale-logo-0.png', height: 150),
                   const SizedBox(height: 16),
                   Text(
                     'Signalements à Crosne',
