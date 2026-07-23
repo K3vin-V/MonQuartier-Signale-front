@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 8),
         const Text(
-          'Signalez un problème sur Crosne'
+          'Signalez un problème sur Crosne '
           '(avec ou sans compte)',
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.grey),
