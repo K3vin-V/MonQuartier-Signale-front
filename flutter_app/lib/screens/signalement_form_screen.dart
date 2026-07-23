@@ -111,6 +111,28 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          // Même en-tête que la page d'accueil (logo + titre), demandé pour
+          // garder une identité visuelle cohérente sur le formulaire.
+          Center(
+            child: Column(
+              children: [
+                Image.asset('assets/images/onQuartier-Signale-logo-2.png', height: 150),
+                const SizedBox(height: 12),
+                Text(
+                  'Signalements à Crosne',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Signalez un problème sur Crosne (avec ou sans compte)',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
           if (widget.embarque)
             Align(
               alignment: Alignment.centerLeft,
