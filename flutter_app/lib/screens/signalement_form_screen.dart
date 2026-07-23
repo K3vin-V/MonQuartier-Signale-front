@@ -116,7 +116,7 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
           Center(
             child: Column(
               children: [
-                Image.asset('assets/images/onQuartier-Signale-logo-2.png', height: 150),
+                Image.asset('assets/images/MonQuartier-Signale-logo-2.png', height: 150),
                 const SizedBox(height: 12),
                 Text(
                   'Signalements à Crosne',
