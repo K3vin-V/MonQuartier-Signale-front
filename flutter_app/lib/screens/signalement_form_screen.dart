@@ -109,7 +109,7 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
     final formulaire = Form(
       key: _formKey,
       child: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.fromLTRB(16, widget.embarque ? 16 : 4, 16, 16),
         children: [
           // Même en-tête que la page d'accueil (logo + titre), demandé pour
           // garder une identité visuelle cohérente sur le formulaire.
@@ -117,22 +117,18 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
             child: Column(
               children: [
                 Image.asset('assets/images/MonQuartier-Signale-logo-2.png', height: 150),
-                const SizedBox(height: 12),
+                const SizedBox(height: 6),
                 Text(
                   'Signalements à Crosne',
-                  style: Theme.of(context).textTheme.headlineSmall,
+                  style: widget.embarque
+                      ? Theme.of(context).textTheme.headlineSmall
+                      : Theme.of(context).textTheme.titleLarge,
                   textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Signalez un problème sur Crosne (avec ou sans compte)',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: widget.embarque ? 24 : 8),
           if (widget.embarque)
             Align(
               alignment: Alignment.centerLeft,
