@@ -24,5 +24,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets : 
-    - web\icons\MonQuartier-Signale-logo-0.jpg
+  assets:
+    - assets/images/
