@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildFormulaire() {
     return SizedBox(
       key: const ValueKey('formulaire'),
-      height: 620, // ajustez selon vos besoins, ou enlevez pour hauteur libre
+      //height: 700, // ajustez selon vos besoins, ou enlevez pour hauteur libre
       child: SignalementFormScreen(
         embarque: true,
         onAnnuler: () => setState(() => _formulaireOuvert = false),
