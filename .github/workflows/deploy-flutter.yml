@@ -34,7 +34,7 @@ jobs:
         # L'URL de l'API Oracle Cloud est injectée au build, jamais en dur dans le code.
         run: |
           flutter build web --release \
-            --base-href "/${{ github.event.repository.name }}/" \
+            --base-href "/" \
             --dart-define=API_BASE_URL=${{ vars.API_BASE_URL }}
 
       - uses: actions/configure-pages@v5
