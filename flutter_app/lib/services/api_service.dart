@@ -111,4 +111,11 @@ class ApiService {
       body: jsonEncode({'statut': statut, if (commentaire != null) 'commentaire': commentaire}),
     );
   }
+
+  Future<void> supprimerSignalement(String token, String id) async {
+    await http.delete(
+      Uri.parse('$apiBaseUrl/signalements/$id'),
+      headers: _headers(token),
+    );
+  }
 }
