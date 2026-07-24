@@ -97,18 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.all(24),
               child: Column(
                 children: [
-                  // Bouton retour cohérent avec celui du formulaire de
-                  // signalement, plutôt que la flèche automatique d'AppBar.
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: TextButton.icon(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.arrow_back),
-                      label: const Text('Retour'),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-
                   // Même en-tête logo + titre que les autres écrans, pour
                   // garder une identité visuelle cohérente.
                   Image.asset('assets/images/MonQuartier-Signale-logo-2.png', height: 150),
@@ -118,7 +106,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: Theme.of(context).textTheme.headlineSmall,
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Signalements à Crosne',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Bouton retour cohérent avec celui du formulaire de
+                  // signalement, placé sous le titre comme sur cet écran.
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.arrow_back),
+                      label: const Text('Retour'),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
 
                   TextField(
                   controller: _emailCtrl,
