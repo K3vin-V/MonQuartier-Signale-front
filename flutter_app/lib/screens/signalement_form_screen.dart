@@ -39,6 +39,7 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
   XFile? _photo;
   String? _erreurAdresse;
   bool _envoiEnCours = false;
+  bool _succesAffiche = false;
 
   final _now = DateTime.now();
 
@@ -61,7 +62,10 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
   }
 
   Future<void> _soumettre() async {
-    setState(() => _erreurAdresse = null);
+    setState(() {
+      _erreurAdresse = null;
+      _succesAffiche = false;
+    });
     if (!_formKey.currentState!.validate() || _photo == null) {
       if (_photo == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -84,25 +88,6 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.green.shade600,
-              behavior: SnackBarBehavior.floating,
-              content: const Row(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.white),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Signalement bien enregistré, merci !',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-
           // Remise à zéro complète du formulaire pour un nouveau signalement.
           _titreCtrl.clear();
           _adresseCtrl.clear();
@@ -115,6 +100,7 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
             _photo = null;
             _type = 'voirie';
             _erreurAdresse = null;
+            _succesAffiche = true;
           });
         }
       } else {
@@ -146,7 +132,7 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
           Center(
             child: Column(
               children: [
-                Image.asset('assets/images/logo.png', height: tailleLogo),
+                Image.asset('assets/images/MonQuartier-Signale-logo-2.png', height: 150),
                 const SizedBox(height: 6),
                 Text(
                   'Signalements à Crosne',
@@ -176,6 +162,36 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
                 label: const Text('Retour'),
               ),
             ),
+          if (_succesAffiche) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.green.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.green.shade300),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green.shade700),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Signalement bien enregistré, merci !',
+                      style: TextStyle(
+                        color: Colors.green.shade800,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close, color: Colors.green.shade700, size: 18),
+                    onPressed: () => setState(() => _succesAffiche = false),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
           TextFormField(
             controller: _emailCtrl,
             decoration: const InputDecoration(labelText: 'Email *'),
