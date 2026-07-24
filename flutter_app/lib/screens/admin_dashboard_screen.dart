@@ -6,6 +6,7 @@ import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import '../widgets/statut_badge.dart';
 import '../widgets/kpi_card.dart';
+import 'home_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -40,7 +41,15 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => context.read<AuthService>().deconnexion(),
+            onPressed: () async {
+              await context.read<AuthService>().deconnexion();
+              if (context.mounted) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const HomeScreen()),
+                  (route) => false,
+                );
+              }
+            },
           ),
           const SizedBox(width: 8),
         ],
