@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
       key: const ValueKey('menu'),
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(Icons.location_city, size: 72, color: Colors.indigo),
+        Image.asset('assets/images/MonQuartier-Signale-logo-2.png', height: 200),
         const SizedBox(height: 16),
         Text(
           'Signalements Crosne',
