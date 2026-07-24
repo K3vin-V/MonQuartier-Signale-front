@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import '../models/signalement.dart';
 
 /// URL du backend. En build, injecter la vraie valeur via :
@@ -22,7 +22,7 @@ class ApiService {
     required String type,
     String? typeAutrePrecision,
     required String adresse,
-    required File photo,
+    required XFile photo,
     String? bearerToken,
   }) async {
     final uri = Uri.parse('$apiBaseUrl/signalements');
@@ -38,7 +38,15 @@ class ApiService {
     if (bearerToken != null) {
       request.headers['Authorization'] = 'Bearer $bearerToken';
     }
-    request.files.add(await http.MultipartFile.fromPath('photo', photo.path));
+
+    // fromBytes plutôt que fromPath : fromPath utilise dart:io, absent sur
+    // Flutter Web. XFile.readAsBytes() fonctionne sur toutes les plateformes.
+    final bytes = await photo.readAsBytes();
+    request.files.add(http.MultipartFile.fromBytes(
+      'photo',
+      bytes,
+      filename: photo.name,
+    ));
 
     return request.send();
   }
@@ -104,4 +112,3 @@ class ApiService {
     );
   }
 }
-
