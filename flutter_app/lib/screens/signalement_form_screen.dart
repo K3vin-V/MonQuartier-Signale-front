@@ -10,6 +10,7 @@ class SignalementFormScreen extends StatefulWidget {
     this.emailUtilisateurConnecte,
     this.embarque = false,
     this.onAnnuler,
+    this.afficherEntete = true,
   });
 
   /// Si l'utilisateur est connecté, son email est pré-rempli (cahier des charges).
@@ -21,6 +22,10 @@ class SignalementFormScreen extends StatefulWidget {
 
   /// Appelé quand l'utilisateur annule, uniquement utile en mode embarqué.
   final VoidCallback? onAnnuler;
+
+  /// false = masque le bloc logo/titre/phrase (utilisé quand ce formulaire est
+  /// ouvert depuis l'espace utilisateur connecté, où ce n'est pas nécessaire).
+  final bool afficherEntete;
 
   @override
   State<SignalementFormScreen> createState() => _SignalementFormScreenState();
@@ -127,32 +132,34 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
       child: ListView(
         padding: EdgeInsets.fromLTRB(16, widget.embarque ? 16 : 4, 16, 16),
         children: [
-          // Même en-tête que la page d'accueil (logo + titre), demandé pour
-          // garder une identité visuelle cohérente sur le formulaire.
-          Center(
-            child: Column(
-              children: [
-                Image.asset('assets/images/MonQuartier-Signale-logo-2.png', height: 150),
-                const SizedBox(height: 6),
-                Text(
-                  'Signalements à Crosne',
-                  style: widget.embarque
-                      ? Theme.of(context).textTheme.headlineSmall
-                      : Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.center,
-                ),
-                if (widget.embarque) ...[
-                  const SizedBox(height: 4),
-                  const Text(
-                    'Signalez un problème sur Crosne (avec ou sans compte)',
+          // Même en-tête que la page d'accueil (logo + titre), affiché sauf
+          // si explicitement masqué (ex: ouvert depuis l'espace connecté).
+          if (widget.afficherEntete) ...[
+            Center(
+              child: Column(
+                children: [
+                  Image.asset('assets/images/logo.png', height: tailleLogo),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Signalements à Crosne',
+                    style: widget.embarque
+                        ? Theme.of(context).textTheme.headlineSmall
+                        : Theme.of(context).textTheme.titleLarge,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey),
                   ),
+                  if (widget.embarque) ...[
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Signalez un problème sur Crosne (avec ou sans compte)',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-          SizedBox(height: widget.embarque ? 24 : 8),
+            SizedBox(height: widget.embarque ? 24 : 8),
+          ],
           if (widget.embarque)
             Align(
               alignment: Alignment.centerLeft,
