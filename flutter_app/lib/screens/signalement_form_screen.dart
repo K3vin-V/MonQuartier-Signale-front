@@ -149,10 +149,6 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
   Widget build(BuildContext context) {
     final dateFormatee = DateFormat('dd/MM/yyyy à HH:mm').format(_now);
 
-    // En plein écran (pas embarqué), l'en-tête est plus compact pour éviter
-    // d'avoir besoin de scroller juste pour voir le formulaire.
-    final tailleLogo = widget.embarque ? 72.0 : 48.0;
-
     final formulaire = Form(
       key: _formKey,
       child: ListView(

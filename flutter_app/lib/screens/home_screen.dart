@@ -39,17 +39,16 @@ class _HomeScreenState extends State<HomeScreen> {
       key: const ValueKey('menu'),
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset('assets/images/MonQuartier-Signale-logo-2.png', height: 200),
+        const Icon(Icons.location_city, size: 72, color: Colors.indigo),
         const SizedBox(height: 16),
         Text(
-          'Signalements à Crosne',
+          'Signalements Crosne',
           style: Theme.of(context).textTheme.headlineSmall,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
         const Text(
-          'Signalez un problème sur Crosne '
-          '(avec ou sans compte)',
+          'Signalez un problème sur la commune, avec ou sans compte.',
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.grey),
         ),
@@ -88,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildFormulaire() {
     return SizedBox(
       key: const ValueKey('formulaire'),
-      //height: 700, // ajustez selon vos besoins, ou enlevez pour hauteur libre
+      height: 682, // +10% par rapport à la valeur initiale (620)
       child: SignalementFormScreen(
         embarque: true,
         onAnnuler: () => setState(() => _formulaireOuvert = false),

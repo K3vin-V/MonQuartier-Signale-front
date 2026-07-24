@@ -15,11 +15,12 @@ class SignalementApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => AuthService()..restaurerSession(),
       child: MaterialApp(
-        title: 'Signalements à Crosne',
-        theme: ThemeData(colorSchemeSeed: Colors.indigo, 
-                         useMaterial3: true,
-                         scaffoldBackgroundColor: Colors.white,
-                        ),
+        title: 'Signalements Crosne',
+        theme: ThemeData(
+          colorSchemeSeed: Colors.indigo,
+          useMaterial3: true,
+          scaffoldBackgroundColor: Colors.white,
+        ),
         home: const _SplashAndRoute(),
       ),
     );
