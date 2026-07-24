@@ -118,50 +118,68 @@ class _ZoneKpi extends StatelessWidget {
 
         return Padding(
           padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final large = constraints.maxWidth > 800;
-                  final cartes = [
-                    KpiCard(titre: 'Signalements créés', jour: crees['jour'], semaine: crees['semaine'], mois: crees['mois']),
-                    KpiCard(titre: 'Signalements modérés', jour: moderes['jour'], semaine: moderes['semaine'], mois: moderes['mois']),
-                    KpiCard(titre: 'Signalements traités', jour: traites['jour'], semaine: traites['semaine'], mois: traites['mois']),
-                  ];
-                  return large
-                      ? Row(children: cartes.map((c) => Expanded(child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4), child: c))).toList())
-                      : Column(children: cartes);
-                },
-              ),
-              const SizedBox(height: 12),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final large = constraints.maxWidth > 800;
-                  final graphs = [
-                    _GraphiqueCamembert(
-                      titre: 'Terminés vs Refusés',
-                      valeurs: {
-                        'Terminés': (termineRefuse['termine'] as int).toDouble(),
-                        'Refusés': (termineRefuse['refuse'] as int).toDouble(),
-                      },
-                      couleurs: const [Colors.green, Colors.red],
-                    ),
-                    _GraphiqueCamembert(
-                      titre: 'Répartition globale',
-                      valeurs: {
-                        'À modérer': (globale['aModerer'] as int).toDouble(),
-                        'En traitement': (globale['enTraitement'] as int).toDouble(),
-                      },
-                      couleurs: const [Colors.orange, Colors.indigo],
-                    ),
-                  ];
-                  return large
-                      ? Row(children: graphs.map((g) => Expanded(child: g)).toList())
-                      : Column(children: graphs);
-                },
-              ),
-            ],
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final cartes = [
+                KpiCard(titre: 'Signalements créés', jour: crees['jour'], semaine: crees['semaine'], mois: crees['mois']),
+                KpiCard(titre: 'Signalements modérés', jour: moderes['jour'], semaine: moderes['semaine'], mois: moderes['mois']),
+                KpiCard(titre: 'Signalements traités', jour: traites['jour'], semaine: traites['semaine'], mois: traites['mois']),
+              ];
+              final graphs = [
+                _GraphiqueCamembert(
+                  titre: 'Terminés vs Refusés',
+                  valeurs: {
+                    'Terminés': (termineRefuse['termine'] as int).toDouble(),
+                    'Refusés': (termineRefuse['refuse'] as int).toDouble(),
+                  },
+                  couleurs: const [Colors.green, Colors.red],
+                ),
+                _GraphiqueCamembert(
+                  titre: 'Répartition globale',
+                  valeurs: {
+                    'À modérer': (globale['aModerer'] as int).toDouble(),
+                    'En traitement': (globale['enTraitement'] as int).toDouble(),
+                  },
+                  couleurs: const [Colors.orange, Colors.indigo],
+                ),
+              ];
+
+              // Écran large : KPI + graphiques sur une seule ligne. Les
+              // cartes KPI (plus de contenu texte) reçoivent plus de place
+              // (flex 3) que les graphiques, plus compacts (flex 2).
+              if (constraints.maxWidth > 1100) {
+                return IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ...cartes.map((c) => Expanded(
+                            flex: 3,
+                            child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: c),
+                          )),
+                      ...graphs.map((g) => Expanded(
+                            flex: 2,
+                            child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: g),
+                          )),
+                    ],
+                  ),
+                );
+              }
+
+              // Écran moyen : deux lignes séparées (KPI puis graphiques).
+              if (constraints.maxWidth > 700) {
+                return Column(
+                  children: [
+                    Row(children: cartes.map((c) => Expanded(child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4), child: c))).toList()),
+                    const SizedBox(height: 12),
+                    Row(children: graphs.map((g) => Expanded(child: g)).toList()),
+                  ],
+                );
+              }
+
+              // Écran étroit : tout empilé verticalement.
+              return Column(children: [...cartes, ...graphs]);
+            },
           ),
         );
       },
