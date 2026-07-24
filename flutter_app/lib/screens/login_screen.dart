@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -36,7 +37,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _connexionGoogle() async {
     try {
-      final googleUser = await GoogleSignIn().signIn();
+      final googleUser = await GoogleSignIn(
+        // Nécessaire pour Flutter Web ; sur mobile, la config native
+        // (google-services.json / GoogleService-Info.plist) suffit et ce
+        // paramètre est ignoré.
+        clientId: kIsWeb
+            ? '<VOTRE_CLIENT_ID_WEB>.apps.googleusercontent.com'
+            : null,
+      ).signIn();
       if (googleUser == null) return; // annulé par l'utilisateur
       setState(() => _enCours = true);
       // Le backend recrée/retrouve le compte à partir de l'id Google + email.
@@ -99,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   // Même en-tête logo + titre que les autres écrans, pour
                   // garder une identité visuelle cohérente.
-                  Image.asset('assets/images/MonQuartier-Signale-logo-2.png', height: 150),
+                  Image.asset('assets/images/logo.png', height: 72),
                   const SizedBox(height: 12),
                   Text(
                     _modeInscription ? 'Créer un compte' : 'Connexion',
@@ -155,26 +163,31 @@ class _LoginScreenState extends State<LoginScreen> {
                       ? 'J\'ai déjà un compte'
                       : 'Pas encore de compte ? Créer un compte'),
                 ),
-                const SizedBox(height: 12),
-                const Row(children: [
-                  Expanded(child: Divider()),
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 8), child: Text('ou')),
-                  Expanded(child: Divider()),
-                ]),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: _enCours ? null : _connexionGoogle,
-                  icon: const Icon(Icons.g_mobiledata, size: 28),
-                  label: const Text('Continuer avec Google'),
-                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
-                ),
-                const SizedBox(height: 8),
-                OutlinedButton.icon(
-                  onPressed: _enCours ? null : _connexionApple,
-                  icon: const Icon(Icons.apple),
-                  label: const Text('Continuer avec Apple'),
-                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
-                ),
+                // Google/Apple Sign-In masqués temporairement (config OAuth
+                // Google à finaliser ; Apple nécessite un compte Apple
+                // Developer payant, pas encore souscrit). Pour réactiver,
+                // décommenter le bloc ci-dessous une fois la config prête.
+                //
+                // const SizedBox(height: 12),
+                // const Row(children: [
+                //   Expanded(child: Divider()),
+                //   Padding(padding: EdgeInsets.symmetric(horizontal: 8), child: Text('ou')),
+                //   Expanded(child: Divider()),
+                // ]),
+                // const SizedBox(height: 12),
+                // OutlinedButton.icon(
+                //   onPressed: _enCours ? null : _connexionGoogle,
+                //   icon: const Icon(Icons.g_mobiledata, size: 28),
+                //   label: const Text('Continuer avec Google'),
+                //   style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+                // ),
+                // const SizedBox(height: 8),
+                // OutlinedButton.icon(
+                //   onPressed: _enCours ? null : _connexionApple,
+                //   icon: const Icon(Icons.apple),
+                //   label: const Text('Continuer avec Apple'),
+                //   style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+                // ),
               ],
             ),
           ),
