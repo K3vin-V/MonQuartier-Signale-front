@@ -118,5 +118,19 @@ class ApiService {
       headers: _headers(token),
     );
   }
-}
 
+  /// Retourne null en cas de succès, sinon le message d'erreur.
+  Future<String?> verifierEmail(String tokenVerification) async {
+    final res = await http.get(
+      Uri.parse('$apiBaseUrl/auth/verify-email?token=$tokenVerification'),
+    );
+    if (res.statusCode != 200 && res.statusCode != 201) {
+      try {
+        return jsonDecode(res.body)['message'] ?? 'Lien de vérification invalide.';
+      } catch (_) {
+        return 'Lien de vérification invalide.';
+      }
+    }
+    return null;
+  }
+}
