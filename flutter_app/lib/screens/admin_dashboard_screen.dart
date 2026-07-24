@@ -294,6 +294,33 @@ class _TableauSignalementsState extends State<_TableauSignalements> {
     widget.onChange();
   }
 
+  Future<void> _supprimer(Signalement s) async {
+    final confirme = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Supprimer ce signalement ?'),
+        content: Text(
+          'Cette action est définitive : "${s.titre}" et ses commentaires '
+          'seront supprimés. Le ticket Zammad associé n\'est pas affecté.',
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Annuler')),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Supprimer'),
+          ),
+        ],
+      ),
+    );
+    if (confirme != true) return;
+
+    final token = context.read<AuthService>().token!;
+    await _api.supprimerSignalement(token, s.id);
+    setState(_charger);
+    widget.onChange();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Signalement>>(
@@ -321,7 +348,18 @@ class _TableauSignalementsState extends State<_TableauSignalements> {
               DataCell(Text(s.email)),
               DataCell(StatutBadge(statut: s.statut)),
               DataCell(widget.lectureSeuleSeulement
-                  ? const Text('—')
+                  ? Row(children: [
+                      IconButton(
+                        tooltip: 'Remettre en modération',
+                        icon: const Icon(Icons.undo, color: Colors.orange),
+                        onPressed: () => _changerStatut(s, 'en_attente_moderation'),
+                      ),
+                      IconButton(
+                        tooltip: 'Supprimer',
+                        icon: const Icon(Icons.delete_outline, color: Colors.red),
+                        onPressed: () => _supprimer(s),
+                      ),
+                    ])
                   : Row(children: [
                       if (widget.actionsModerationVisibles) ...[
                         IconButton(
