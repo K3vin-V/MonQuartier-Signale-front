@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -37,7 +36,7 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
   final _autrePrecisionCtrl = TextEditingController();
 
   String _type = 'voirie';
-  File? _photo;
+  XFile? _photo;
   String? _erreurAdresse;
   bool _envoiEnCours = false;
 
@@ -58,7 +57,7 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
 
   Future<void> _choisirPhoto() async {
     final picked = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 85);
-    if (picked != null) setState(() => _photo = File(picked.path));
+    if (picked != null) setState(() => _photo = picked);
   }
 
   Future<void> _soumettre() async {
@@ -106,6 +105,10 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
   Widget build(BuildContext context) {
     final dateFormatee = DateFormat('dd/MM/yyyy à HH:mm').format(_now);
 
+    // En plein écran (pas embarqué), l'en-tête est plus compact pour éviter
+    // d'avoir besoin de scroller juste pour voir le formulaire.
+    final tailleLogo = widget.embarque ? 72.0 : 48.0;
+
     final formulaire = Form(
       key: _formKey,
       child: ListView(
@@ -116,7 +119,7 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
           Center(
             child: Column(
               children: [
-                Image.asset('assets/images/MonQuartier-Signale-logo-2.png', height: 150),
+                Image.asset('assets/images/logo.png', height: tailleLogo),
                 const SizedBox(height: 6),
                 Text(
                   'Signalements à Crosne',
@@ -125,6 +128,14 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
                       : Theme.of(context).textTheme.titleLarge,
                   textAlign: TextAlign.center,
                 ),
+                if (widget.embarque) ...[
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Signalez un problème sur Crosne (avec ou sans compte)',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
               ],
             ),
           ),
