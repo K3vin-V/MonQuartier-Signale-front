@@ -4,6 +4,7 @@ import '../models/signalement.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import '../widgets/statut_badge.dart';
+import 'home_screen.dart';
 import 'signalement_form_screen.dart';
 
 class UserDashboardScreen extends StatefulWidget {
@@ -71,8 +72,15 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
             onPressed: () async {
               await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => SignalementFormScreen(
-                  emailUtilisateurConnecte: user?.email,
+                MaterialPageRoute(builder: (_) => Scaffold(
+                  body: SafeArea(
+                    child: SignalementFormScreen(
+                      emailUtilisateurConnecte: user?.email,
+                      embarque: true,
+                      afficherEntete: false,
+                      onAnnuler: () => Navigator.pop(context),
+                    ),
+                  ),
                 )),
               );
               setState(_charger);
@@ -101,7 +109,15 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
           IconButton(
             tooltip: 'Déconnexion',
             icon: const Icon(Icons.logout),
-            onPressed: () => context.read<AuthService>().deconnexion(),
+            onPressed: () async {
+              await context.read<AuthService>().deconnexion();
+              if (context.mounted) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const HomeScreen()),
+                  (route) => false,
+                );
+              }
+            },
           ),
           const SizedBox(width: 8),
         ],
