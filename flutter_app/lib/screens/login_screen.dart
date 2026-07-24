@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   // Même en-tête logo + titre que les autres écrans, pour
                   // garder une identité visuelle cohérente.
-                  Image.asset('assets/images/logo.png', height: 72),
+                  Image.asset('assets/images/MonQuartier-Signale-logo-2.png', height: 200),
                   const SizedBox(height: 12),
                   Text(
                     _modeInscription ? 'Créer un compte' : 'Connexion',
