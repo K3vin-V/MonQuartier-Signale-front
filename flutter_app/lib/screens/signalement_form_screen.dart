@@ -85,10 +85,37 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
       if (response.statusCode == 201 || response.statusCode == 200) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Signalement envoyé, merci !')),
+            SnackBar(
+              backgroundColor: Colors.green.shade600,
+              behavior: SnackBarBehavior.floating,
+              content: const Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.white),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Signalement bien enregistré, merci !',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
+
+          // Remise à zéro complète du formulaire pour un nouveau signalement.
+          _titreCtrl.clear();
+          _adresseCtrl.clear();
+          _autrePrecisionCtrl.clear();
+          if (widget.emailUtilisateurConnecte == null) {
+            _emailCtrl.clear(); // sinon on garde l'email pré-rempli de l'utilisateur connecté
+          }
           _formKey.currentState!.reset();
-          setState(() => _photo = null);
+          setState(() {
+            _photo = null;
+            _type = 'voirie';
+            _erreurAdresse = null;
+          });
         }
       } else {
         final body = jsonDecode(await response.stream.bytesToString());
@@ -119,7 +146,7 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
           Center(
             child: Column(
               children: [
-                Image.asset('assets/images/MonQuartier-Signale-logo-2.png', height: 150),
+                Image.asset('assets/images/logo.png', height: tailleLogo),
                 const SizedBox(height: 6),
                 Text(
                   'Signalements à Crosne',
