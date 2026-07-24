@@ -62,7 +62,33 @@ class _SignalementFormScreenState extends State<SignalementFormScreen> {
   }
 
   Future<void> _choisirPhoto() async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 85);
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Prendre une photo'),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Choisir depuis la galerie'),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (source == null) return; // annulé
+
+    final picked = await ImagePicker().pickImage(source: source, imageQuality: 85);
     if (picked != null) setState(() => _photo = picked);
   }
 
